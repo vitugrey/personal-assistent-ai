@@ -10,7 +10,7 @@ RealtimeSTT: Mais baixa latência, porém sem privacidade. (https://github.com/K
 
 [x] Abrir qualquer programa no PC<br>
 
-[ ] LLM flexível (https://huggingface.co/turboderp/Llama-3-8B-Instruct-exl2/tree/4.0bpw)<br>
+[x] LLM gemini (https://python.langchain.com/docs/integrations/providers/google/)<br>
 
 [x] TTS em tempo real. <br>
 RealtimeTTS: Qualidade boa, em tempo real e offline. (https://github.com/KoljaB/RealtimeTTS)<br>

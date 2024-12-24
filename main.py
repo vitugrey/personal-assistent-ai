@@ -1,5 +1,7 @@
 # ============ IMPORTAÇÕES ============ #
 import os
+import json
+import re
 from dotenv import find_dotenv, load_dotenv
 from audio_recorder import AudioRecorder
 from transcription import AudioTranscription
@@ -7,6 +9,8 @@ from llm import LLM
 from text_to_speech import TextToSpeech
 
 # ============ CONSTANTES ============ #
+_ = load_dotenv(find_dotenv())
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 # ============ Configuração Básica ============ #
 _ = load_dotenv(find_dotenv())
 # ============ Código ============ #
@@ -19,36 +23,62 @@ class KaLLia:
         self.message_history = []
         self.context = []
 
+        self.tts = TextToSpeech()
+
     def start(self):
         AudioRecorder.record_audio()
         transcriptor = AudioTranscription()
-        tts = TextToSpeech()
-
+        
         audio_input = transcriptor.transcribe_audio_whisper()
 
-        if 'Abri' in audio_input or 'Abrir' in audio_input:
-            nome_pasta = audio_input.lower().replace('abrir', '').strip()
-            tts.convert_with_pyttsx3(text=self.open_dir(nome_pasta))
-            
+        self.check(audio_input)
 
-        
+    def check(self, audio_input):
+        clean_input = audio_input.rstrip('.').strip().lower()
+        palavras = clean_input.split()
+        try:
+            if "abrir" in palavras[0] or "abri" in palavras[0]:
+                pasta = palavras[-1]
+                self.open_program(pasta)
+            else:
+                print("Comando não reconhecido.")
+                self.get_response(prompt=audio_input)
+        except:
+            pass
 
-    def open_dir(self, nome_pasta):
-        pastas = {
-            "projeto": r"C:\Users\vitor\Desktop\Projetos",
-            "controle": r"C:\Users\vitor\Desktop\Projetos\APP\Controle_Orçamento",
-            "app": r"C:\Users\vitor\Desktop\Projetos\APP",
-            "música": r"C:\Users\vitor\Music",
-            "notion": r"C:\Users\vitor\AppData\Local\Programs\Notion\Notion.exe",
-        }
+    def open_program(self, nome_pasta):
+        try:
+            with open("diretorios.json", "r", encoding='utf-8') as file:
+                pastas = json.load(file)
+        except FileNotFoundError:
+            self.tts.convert_with_pyttsx3("Arquivo não encontrado.")
+            return
+        except json.JSONDecodeError:
+            self.tts.convert_with_pyttsx3("Erro ao carregar o arquivo de diretórios.")
+            return
+
         if nome_pasta in pastas:
             caminho = pastas[nome_pasta]
-            os.startfile(caminho)  # Abre a pasta
-            print(f"Abrindo a pasta: {nome_pasta}")
-            return f"Abrindo a pasta: {nome_pasta}"
+            try:
+                os.startfile(caminho)
+                self.tts.convert_with_pyttsx3(f"Abrindo: {nome_pasta}")
+            except Exception as e:
+                self.tts.convert_with_pyttsx3(f"Erro ao tentar abrir '{nome_pasta}': {e}")
         else:
-            print("Comando não reconhecido ou pasta não mapeada.")
-            return "Comando não reconhecido ou pasta não mapeada."
+            self.tts.convert_with_pyttsx3(f"Arquivo {nome_pasta} não mapeado.")
+
+
+    def get_response(self, prompt):
+        chat = LLM()
+        chat.load_memory()
+        voice_output = chat.generate_ansewer_genai(
+            api_key=GOOGLE_API_KEY,
+            prompt=prompt,
+            max_tokens=None)
+        chat.save_memory()
+        self.tts.convert_with_pyttsx3(voice_output)
+
+    
 
     def load_file(self, file_path: str) -> str:
         self.file_path = file_path

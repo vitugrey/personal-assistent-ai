@@ -1,34 +1,46 @@
-from typing import List
+import os
+import json
+from dotenv import load_dotenv, find_dotenv
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
-import re
+from langchain_community.chat_message_histories import SQLChatMessageHistory
+
 
 class LLM:
+    def __init__(self, memory: list = []):
+        self.memory = memory
 
-    pass
+    def load_memory(self):
+        with open('memory.json', 'r', encoding='utf-8') as f:
+            memory_data = json.loads(f.read())
+            # Reconstrói os objetos a partir dos dicionários
+            self.memory = [
+                HumanMessage(content=msg["content"]) if msg["type"] == "HumanMessage"
+                else AIMessage(content=msg["content"])
+                for msg in memory_data
+            ]
 
-# class LLM:
-#     def __init__(self, api_key: str, model_name: str = 'gemini-1.5-flash'):
-#         self.model_name = model_name
-#         self.api_key = api_key
-#         self.history = []
+    def save_memory(self):
+        with open('memory.json', 'w', encoding='utf-8') as f:
+            # Serializa os objetos como dicionários
+            serializable_memory = [
+                {"type": msg.__class__.__name__, "content": msg.content} for msg in self.memory
+            ]
+            json.dump(serializable_memory, f, ensure_ascii=False, indent=4)
 
-#     def generate_answer(self, prompt: str) -> str:
-#         chat = ChatGoogleGenerativeAI(model=self.model_name, api_key=self.api_key)
+    def generate_ansewer_genai(self, api_key, prompt, max_tokens):
 
-#         self.history.append(HumanMessage(content=prompt))
-#         response = chat.invoke(self.history)
-#         self.history.append(AIMessage(content=response.content))
+        chat = ChatGoogleGenerativeAI(
+            model='gemini-1.5-flash',
+            api_key=api_key,
+            max_tokens=max_tokens,
+        )
 
-#         return response.content
+        self.memory.append(HumanMessage(content=prompt))
 
-#     def pos_answer(self, answer: str) -> tuple:
-#         code_pattern = re.compile(r'```(.*?)```', re.DOTALL)
-#         match = code_pattern.search(answer)
+        response = chat.invoke(self.memory)
 
-#         if match:
-#             code = match.group(1).strip()  # Extrai o código
-#             output = answer.replace(match.group(0), '').strip()  # Remove o código do restante da resposta
-#             return code, output
-#         else:
-#             return '', answer  # Se não encontrar código, retorna resposta completa
+        self.memory.append(AIMessage(content=response.content))
+
+        return response.content

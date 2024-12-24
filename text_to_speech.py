@@ -4,6 +4,7 @@ import pyttsx3
 from playsound import playsound
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
+import requests
 
 
 class TextToSpeech:
@@ -56,7 +57,6 @@ class TextToSpeech:
 
     def convert_with_pyttsx3(self, text):
         try:
-
             engine = pyttsx3.init()
             engine.setProperty('rate', 150)
             engine.setProperty('volume', 1.0)
@@ -66,3 +66,24 @@ class TextToSpeech:
             engine.runAndWait()
         except Exception as e:
             print(f"Erro ao converter texto para áudio com pyttsx3: {e}")
+
+    def convert_with_voicevox(self, text, speaker_id=1):
+        try:
+            params = {"text": text, "speaker": speaker_id}
+
+            synthesis_response = requests.post("http://127.0.0.1:50021/audio_query", params=params)
+            synthesis_response.raise_for_status()
+            audio_query = synthesis_response.json()
+
+            synthesis_audio = requests.post(
+                "http://127.0.0.1:50021/synthesis",
+                json=audio_query,
+                params={"speaker": speaker_id}
+            )
+            synthesis_audio.raise_for_status()
+
+            with open('voice_output.wav', "wb") as f:
+                f.write(synthesis_audio.content)
+        except Exception as e:
+            print(f"Erro ao converter texto para áudio com VoiceVox: {e}")
+
