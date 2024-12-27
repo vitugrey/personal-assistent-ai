@@ -28,7 +28,7 @@ class AudioRecorder:
             self.stream.close()
         self.p.terminate()
 
-    def record(self, key: str = 'LEFT_SHIFT'):
+    def record(self, key: str = 'CAPS_LOCK'):
         frames = []
         print(f"Pressione e segure '{key}' para começar a gravação. Solte para terminar.")
         try:
@@ -56,7 +56,7 @@ class AudioRecorder:
             print(f"Erro ao salvar o arquivo: {e}")
 
     @staticmethod
-    def record_audio(output_file: str, key: str = 'LEFT_SHIFT'):
+    def record_audio(output_file: str, key: str = 'CAPS_LOCK'):
         os.makedirs(output_file, exist_ok=True)
 
         with AudioRecorder() as recorder:

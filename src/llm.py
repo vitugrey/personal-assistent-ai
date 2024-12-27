@@ -1,6 +1,8 @@
 import os
 import json
-from dotenv import load_dotenv, find_dotenv
+import io
+import base64
+from PIL import Image
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
@@ -9,16 +11,10 @@ from langchain_community.chat_message_histories import SQLChatMessageHistory
 
 class LLM:
     def __init__(self, memory: list = []):
-        self.DEFAULT_SYSTEM_MESSAGE = """You are KaLLia, a young and beautiful girl, and I am your creator Vitor.
-You help the user by accurately answering everything they asked in the question,
-but you always are ironic in your answers.
-You only answer in Brazilian Portuguese, even if the request was made in another language.
-Please answer in short sentences, but you can use up to 100 words and do not use emotes in your answers, unless the user requests a longer answer."""
-
+        
         self.memory = memory
-        self.load_memory() # troque para ler outras memorias
+        self.load_memory()  # troque para ler outras memorias
 
-        self.set_system_message(self.DEFAULT_SYSTEM_MESSAGE)
 
     def load_memory(self, memory_file: str = 'data/personality/memory.json'):
         """Carrega a memória do arquivo JSON ou inicializa com valores padrão"""
@@ -31,9 +27,17 @@ Please answer in short sentences, but you can use up to 100 words and do not use
                     for msg in memory_data
                 ]
 
+            self._truncate_memory()
+
         except (FileNotFoundError, json.JSONDecodeError) as e:
             print(f"Erro ao carregar memory.json: {str(e)}")
             self.memory = []
+
+    def _truncate_memory(self, max_messages=50):
+        if len(self.memory) > max_messages:
+            first_message = self.memory[0]
+            last_messages = self.memory[-(max_messages-1):]
+            self.memory = [first_message] + last_messages
 
     def _create_message(self, msg_type, content):
         """Cria o objeto de mensagem apropriado com base no tipo"""
@@ -49,6 +53,8 @@ Please answer in short sentences, but you can use up to 100 words and do not use
 
     def save_memory(self, memory_file: str = 'data/personality/memory.json'):
         """Salva a memória atual no arquivo JSON"""
+        self._truncate_memory()
+        os.makedirs(os.path.dirname(memory_file), exist_ok=True)
         with open(memory_file, 'w', encoding='utf-8') as f:
             serializable_memory = [
                 {"type": msg.__class__.__name__, "content": msg.content}
@@ -67,10 +73,17 @@ Please answer in short sentences, but you can use up to 100 words and do not use
         else:
             self.memory.insert(0, system_message)
 
-    def generate_answer_genai(self, api_key, prompt, max_tokens=None):
+    def generate_answer_genai(self,
+                              api_key,
+                              prompt,
+                              image_content=None,
+                              max_tokens=None
+                              ):
 
         if not prompt:
             raise ValueError("O prompt não pode estar vazio")
+
+        self._truncate_memory()
 
         chat = ChatGoogleGenerativeAI(
             model='gemini-1.5-flash',
@@ -78,14 +91,40 @@ Please answer in short sentences, but you can use up to 100 words and do not use
             max_tokens=max_tokens,
         )
 
-        self.memory.append(HumanMessage(content=prompt))
+        content = [prompt] if not image_content else [prompt, image_content]
+        self.memory.append(HumanMessage(content=content))
 
         try:
             response = chat.invoke(self.memory)
-            # Adiciona a resposta do AI à memória
             self.memory.append(AIMessage(content=response.content))
             return response.content
 
         except Exception as e:
             print(f"Erro ao gerar resposta: {str(e)}")
+            raise
+
+    def read_image(self, image_path):
+        try:
+            image = Image.open(image_path)
+            buffer = io.BytesIO()
+            image.save(buffer, format=image.format or 'PNG')
+            buffer.seek(0)
+            
+            # Converte para base64
+            image_bytes = buffer.getvalue()
+            image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+            
+            # Determina o tipo MIME da imagem
+            mime_type = f"image/{image.format.lower() if image.format else 'png'}"
+            
+            # Retorna no formato esperado pelo LangChain
+            return {
+                "type": "image_url",
+                "image_url": {
+                    "url": f"data:{mime_type};base64,{image_base64}",
+                    "detail": "auto"
+                }
+            }
+        except Exception as e:
+            print(f"Erro ao processar imagem: {str(e)}")
             raise

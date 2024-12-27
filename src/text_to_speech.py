@@ -1,6 +1,8 @@
 import os
 from gtts import gTTS
 import pyttsx3
+import asyncio
+from edge_tts import VoicesManager, Communicate
 from playsound import playsound
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
@@ -11,7 +13,7 @@ class TextToSpeech:
     def __init__(self, elevenlabs_api_key=None):
         self.elevenlabs_api_key = elevenlabs_api_key
 
-    def convert_with_elevenlabs(self, text, output_filename=None):  # data/audios/output_voice.wav
+    def convert_with_elevenlabs(self, text, output_filename='data/audios/voice_output.mp3'):  # data/audios/output_voice.wav
         if not self.elevenlabs_api_key:
             raise ValueError("API key for ElevenLabs is not set.")
 
@@ -34,7 +36,7 @@ class TextToSpeech:
 
         with open(output_filename, 'wb') as f:
             f.write(audio_bytes)
-
+        print(f"KaLLia: {text}")
         playsound(output_filename)
         os.remove(output_filename)
 
@@ -42,6 +44,7 @@ class TextToSpeech:
 
         tts = gTTS(text=text, lang='pt', slow=False)
         tts.save(output_filename)
+        print(f"KaLLia: {text}")
         os.system(f"start {output_filename}")
 
     def convert_with_pyttsx3(self, text):
@@ -70,8 +73,31 @@ class TextToSpeech:
                 params={"speaker": speaker_id}
             )
             synthesis_audio.raise_for_status()
+            print(f"KaLLia: {text}")
 
             with open('data/audios/output_voice.wav', "wb") as f:
                 f.write(synthesis_audio.content)
         except Exception as e:
             print(f"Erro ao converter texto para áudio com VoiceVox: {e}")
+
+    def convert_with_edge_tts(self,
+                              text,
+                              output_filename="data/audios/voice_output.mp3",
+                              voice="pt-BR-FranciscaNeural"):
+        try:
+            asyncio.run(self._edge_tts_async(text, output_filename, voice))
+            print(f"KaLLia: {text}")
+            playsound(output_filename)
+            os.remove(output_filename)
+        except Exception as e:
+            print(f"Erro ao converter texto para áudio com Edge TTS: {e}")
+
+    async def _edge_tts_async(self, text, output_filename, voice):
+        communicate = Communicate(text, voice)
+        await communicate.save(output_filename)
+
+
+# if __name__ == "__main__":
+#     tts = TextToSpeech()
+#     text = "Olá! Este é um teste de conversão de texto para áudio em formato mp3."
+#     tts.convert_with_edge_tts(text)
