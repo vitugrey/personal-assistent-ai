@@ -19,6 +19,6 @@ VoiceVox: Voz de japones (https://github.com/voicevox-client/python)<br>
 
 [ ] Entender código e responder<br>
 
-[ ] Personalidade<br>
+[x] Personalidade<br>
 
 [ ] Interface para controle de parametros do modelo<br>
