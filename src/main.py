@@ -18,9 +18,9 @@ ELEVENLABS_API_KEY = os.getenv('ELEVENLABS2_API_KEY')
 # ============ Código ============ #
 
 
-class KaLLia:
+class AssitentBot:
     def __init__(self):
-        self.personality_file = self.load_file('data/personality/personality.json')['Default']
+        self.personality_file = self.load_file('data/personality/personality.json')['Programmer']
         self.tts = TextToSpeech(elevenlabs_api_key=ELEVENLABS_API_KEY)
         self.llm = LLM()
 
@@ -39,6 +39,8 @@ class KaLLia:
         clean_input = audio_input.rstrip('.').strip().lower()
         palavras = clean_input.split()
 
+        # no futuro, aqui tem que entrar algum algoritmo de classificação de texto para direcionar qual funcionalidade
+        # vai executar
         try:
             if 'thank you' in clean_input:
                 return
@@ -46,14 +48,24 @@ class KaLLia:
             elif palavras and ("abrir" in palavras[0] or "abri" in palavras[0] or "abra" in palavras[0] or "abre" in palavras[0] or "abro" in palavras[0]):
                 pasta = palavras[-1]
                 self.open_program(pasta)
-            elif "screenshot" in clean_input:
+            elif "screenshot" in clean_input or "print" in clean_input:
                 screenshot_path = self.take_screenshot()
                 if screenshot_path:
                     image_content = self.llm.read_image(screenshot_path)
-
-                    self.get_response(prompt=audio_input, image_content=image_content)
+                    screenshot_command = clean_input[clean_input.index("screenshot"):]
+                    self.get_response(prompt=screenshot_command, image_content=image_content)
                 else:
                     self.tts.convert_with_edge_tts("Desculpe, não consegui tirar a screenshot.")
+            elif "código" in clean_input:
+
+                code = self.load_file(file_path='data/input_code.txt')
+                template = f"""leia o seguinte código:
+                ```python
+                {code}
+                ```
+                Responda especificamente à pergunta do usuário: {clean_input}
+                """
+                self.get_response(prompt=template)
 
             else:
                 self.get_response(prompt=audio_input)
@@ -66,13 +78,21 @@ class KaLLia:
             voice_output = self.llm.generate_answer_genai(
                 api_key=GOOGLE_API_KEY,
                 prompt=prompt,
-                max_tokens=50,
+                max_tokens=None,
                 image_content=image_content
             )
 
             self.llm.save_memory()
             if voice_output:
-                self.tts.convert_with_edge_tts(text=voice_output)
+                voice_output = voice_output.replace('*', '')
+                match = re.search(r"```python\n(.*?)```", voice_output, re.DOTALL)
+                if match:
+                    code_output = match.group(1).strip()
+                    text_output = voice_output[:match.start()] + voice_output[match.end():]
+                    self.save_file(content=code_output, output_file='data/output_code.txt')
+                    self.tts.convert_with_edge_tts(text=text_output)
+                else:
+                    self.tts.convert_with_edge_tts(text=voice_output)
 
             else:
                 self.tts.convert_with_edge_tts("Desculpe, não consegui gerar uma resposta.")
@@ -122,23 +142,30 @@ class KaLLia:
             print(f"Erro ao tirar screenshot: {e}")
             return None
 
-    def load_file(self, file_path: str) -> str:
-        self.file_path = file_path
+    def load_file(self, file_path: str):
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                content = file.read()
+                try:
+                    return json.loads(content)
+                except json.JSONDecodeError:
+                    return content
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Arquivo não encontrado: {file_path}")
+        except Exception as e:
+            raise Exception(f"Erro ao ler arquivo {file_path}: {str(e)}")
 
-        with open(self.file_path, 'r', encoding='utf-8') as file:
-            return json.loads(file.read())
-
-    def save_file(self, output_content: str, output_file: str):
+    def save_file(self, content: str, output_file: str):
         with open(output_file, 'w', encoding='utf-8') as file:
-            file.write(output_content)
+            file.write(content)
 
 
-        # ============ Run server ============ #
+# ============ Run server ============ #
 if __name__ == "__main__":
-    kallia = KaLLia()
+    AssitentBot = AssitentBot()
     while True:
         try:
-            kallia.start()
+            AssitentBot.start()
         except KeyboardInterrupt:
             print("\nEncerrando o programa...")
             break

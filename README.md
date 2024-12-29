@@ -1,24 +1,22 @@
-Assistente virtual com IA para fazer tudo no meu PC.
-STT -> LLM -> TTS
+<div align="center">
+  <h1>👾 Bot AI 👾</h1>
+  <p><i>💬 Converse com sua LLM com personalidade única por voz e automatize seu desktop.</i></p>
+</div>
 
-Features:
-<br>
+## 📋 Funcionalidades:
 
-[x] STT em tempo real.<br>
-Faster-Whisper: P/ modelos offfline com rapidez e privacidade. (https://github.com/SYSTRAN/faster-whisper)<br>
-RealtimeSTT: Mais baixa latência, porém sem privacidade. (https://github.com/KoljaB/RealtimeSTT)<br>
+- STT em tempo real.
+- TTS em tempo real.
+- LLM para processar as respostas.
+- System Message com personalidade única.
+- Abra programas e pastas por comando de voz.
+- Inputs com imagens a partir da screenshot da tela.
+- Input e output de código em arquivos.txt
 
-[x] Abrir qualquer programa no PC<br>
+## 📚 Bibliotecas:
 
-[x] LLM gemini (https://python.langchain.com/docs/integrations/providers/google/)<br>
+- Faster-Whisper [https://github.com/SYSTRAN/faster-whisper]
+- Framework Langchain [https://python.langchain.com/docs/integrations/providers/google/]
+- Edge-TTS [https://github.com/rany2/edge-tts]
 
-[x] TTS em tempo real. <br>
-RealtimeTTS: Qualidade boa, em tempo real e offline. (https://github.com/KoljaB/RealtimeTTS)<br>
-Elevenlabs: Qualidade superio, gera voz rápida, e requer internet. (https://github.com/elevenlabs/elevenlabs-python)<br>
-VoiceVox: Voz de japones (https://github.com/voicevox-client/python)<br>
-
-[ ] Entender código e responder<br>
-
-[x] Personalidade<br>
-
-[ ] Interface para controle de parametros do modelo<br>
+## instalação
