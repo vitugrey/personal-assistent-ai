@@ -1,0 +1,32 @@
+{
+  "config": {
+    "path_memory": "data/json/memory.json",
+    "path_skills": "data/json/skills.json",
+    "path_transcription": "/data/json/transcription.txt",
+    "max_tokens": 128,
+    "programs": {
+      "calculadora": "C:\\Users\\vitor\\Links\\Calculadora",
+      "calculadoras": "C:\\Users\\vitor\\Links\\Calculadora",
+      "code": "C:\\Users\\vitor\\links\\Code",
+      "vscode": "C:\\Users\\vitor\\links\\Code",
+      "código": "C:\\Users\\vitor\\Links\\Codigo",
+      "discord": "C:\\Users\\vitor\\Links\\Discord",
+      "download": "C:\\Users\\vitor\\Links\\Downloads",
+      "downloads": "C:\\Users\\vitor\\Links\\Downloads",
+      "navegador": "C:\\Users\\vitor\\links\\Navegador",
+      "notas": "C:\\Users\\vitor\\Links\\Notas",
+      "nota": "C:\\Users\\vitor\\Links\\Notas",
+      "notion": "C:\\Users\\vitor\\Links\\Notas",
+      "finança": "C:\\Users\\vitor\\Links\\Financa",
+      "finanças": "C:\\Users\\vitor\\Links\\Financa",
+      "projetos": "C:\\Users\\vitor\\Links\\Projetos",
+      "projeto": "C:\\Users\\vitor\\Links\\Projetos",
+      "jogos": "C:\\Users\\vitor\\Links\\Steam",
+      "jogo": "C:\\Users\\vitor\\Links\\Steam",
+      "steam": "C:\\Users\\vitor\\Links\\Steam",
+      "terminal": "C:\\Users\\vitor\\Links\\Terminal",
+      "link": "C:\\Users\\vitor\\links",
+      "links": "C:\\Users\\vitor\\links"
+    }
+  }
+}

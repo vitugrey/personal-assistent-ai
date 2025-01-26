@@ -9,9 +9,11 @@
 - TTS em tempo real.
 - LLM para processar as respostas.
 - System Message com personalidade única.
-- Abra programas e pastas por comando de voz.
-- Inputs com imagens a partir da screenshot da tela.
-- Input e output de código em arquivos.txt
+- Memória persistente.
+- Abra diretórios por comando de voz.
+- Input da screeeshot da tela para prompt.
+- Transcrição do que tiver na tela para arquivo .txt.
+- Prompts a partir da AI para simular uma conversa real.
 
 ## 📚 Bibliotecas:
 
@@ -20,3 +22,4 @@
 - Edge-TTS [https://github.com/rany2/edge-tts]
 
 ## instalação
+python==3.11.9

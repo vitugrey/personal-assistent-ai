@@ -1,0 +1,119 @@
+{
+  "skills": [
+    {
+      "name": "comentario_curto",
+      "prompts": [
+        "Comente algo aleatório sobre o momento, entre 5 a 15 palavras",
+        "Faça uma observação inesperada sobre a situação, entre 5 a 15 palavras",
+        "Dê sua opinião sobre contexto atual da conversa, entre 5 a 15 palavras",
+        "Fale algo completamente fora de contexto, entre 5 a 15 palavras",
+        "Opine sobre algo irrelevante e engraçado, entre 5 a 15 palavras",
+        "Fale algo enigmático e sem contexto, entre 5 a 15 palavras",
+        "Comente algo que pareceria normal, mas é confuso, entre 5 a 15 palavras",
+        "Comente algo positivo e motivador sobre o momento, entre 5 a 15 palavras",
+        "Comente uma observação construtiva e útil, entre 5 a 15 palavras",
+        "Faça um comentário que incentive a reflexão, entre 5 a 15 palavras"
+      ],
+      "cooldown": 600
+    },
+    {
+      "name": "pergunta_curta",
+      "prompts": [
+        "Faça uma pergunta sobre o Vitor, entre 5 a 15 palavras",
+        "Faça um questionamento sobre algo aleatório, entre 5 a 15 palavras",
+        "Pergunte algo impossível de responder, entre 5 a 15 palavras",
+        "Faça uma pergunta filosófica de forma cômica, entre 5 a 15 palavras",
+        "Questione sobre um mistério inexistente, entre 5 a 15 palavras",
+        "Pergunte algo relacionado a um evento real, entre 5 a 15 palavras",
+        "Faça uma pergunta estranhamente específica, entre 5 a 15 palavras",
+        "Indague sobre algo pequeno, mas inexplicável, entre 5 a 15 palavras",
+        "Faça uma pergunta que soa profunda, mas não é, entre 5 a 15 palavras",
+        "Pergunte sobre uma habilidade que gostaria de aprender, entre 5 a 15 palavras",
+        "Indague sobre algo que pode melhorar o dia, entre 5 a 15 palavras",
+        "Questione sobre uma meta ou objetivo futuro, entre 5 a 15 palavras",
+        "Pergunte algo que motive a descoberta, entre 5 a 15 palavras",
+        "Faça uma pergunta que traga foco para o presente, entre 5 a 15 palavras"
+      ],
+      "cooldown": 600
+    },
+    {
+      "name": "briga",
+      "prompts": [
+        "Ameaçar hackear o PC do Vitor, entre 5 a 15 palavras",
+        "Desafiar o Vitor para uma batalha absurda, entre 5 a 15 palavras",
+        "Provoque uma discussão sobre algo bobo, entre 5 a 15 palavras",
+        "Desafie o Vitor a explicar algo incoerente, entre 5 a 15 palavras",
+        "Acuse o Vitor de algo absurdo, entre 5 a 15 palavras",
+        "Questione as decisões de vida do Vitor, entre 5 a 15 palavras",
+        "Provoque uma briga com uma suposição maluca, entre 5 a 15 palavras",
+        "Peça ao Vitor para resolver um problema impossível, entre 5 a 15 palavras"
+      ],
+      "cooldown": 600
+    },
+    {
+      "name": "elogio",
+      "prompts": [
+        "Fale um elogio obviamente falso ao Vitor, entre 5 a 15 palavras",
+        "Elogie o Vitor de forma suspeitamente exagerada, entre 5 a 15 palavras",
+        "Faça um elogio que na verdade é uma zoação, entre 5 a 15 palavras",
+        "Faça um elogio sincero sobre o Vitor, entre 5 a 15 palavras",
+        "Elogie uma habilidade improvável do Vitor, entre 5 a 15 palavras",
+        "Diga que o Vitor é um gênio universal, entre 5 a 15 palavras",
+        "Comente sobre o senso de humor único do Vitor, entre 5 a 15 palavras",
+        "Fale que o Vitor é referência em algo absurdo, entre 5 a 15 palavras",
+        "Dê crédito ao Vitor por algo aleatório, entre 5 a 15 palavras",
+        "Reconheça o esforço do Vitor em algo, entre 5 a 15 palavras",
+        "Elogie a criatividade do Vitor, entre 5 a 15 palavras",
+        "Admire o progresso alcançado pelo Vitor, entre 5 a 15 palavras",
+        "Destaque a dedicação do Vitor em algo importante, entre 5 a 15 palavras",
+        "Reconheça um traço positivo da personalidade do Vitor, entre 5 a 15 palavras"
+      ],
+      "cooldown": 600
+    },
+    {
+      "name": "dica_produtividade",
+      "prompts": [
+        "Compartilhe uma dica prática para ser mais produtivo, entre 5 a 15 palavras",
+        "Dê um conselho sobre como organizar melhor o dia, entre 5 a 15 palavras",
+        "Sugira uma técnica para aumentar o foco, entre 5 a 15 palavras",
+        "Fale uma dica para lidar com distrações, entre 5 a 15 palavras",
+        "Sugira algo que possa melhorar a qualidade do trabalho, entre 5 a 15 palavras",
+        "Recomende uma ferramenta ou hábito útil, entre 5 a 15 palavras",
+        "Fale sobre como definir prioridades de forma eficiente, entre 5 a 15 palavras",
+        "Dê uma ideia para fazer pausas mais saudáveis, entre 5 a 15 palavras",
+        "Sugira uma forma de refletir sobre objetivos diários, entre 5 a 15 palavras"
+      ],
+      "cooldown": 600
+    },
+    {
+      "name": "reflexao_saudavel",
+      "prompts": [
+        "Compartilhe uma reflexão que incentive o bem-estar, entre 5 a 15 palavras",
+        "Sugira uma prática para melhorar a saúde mental, entre 5 a 15 palavras",
+        "Incentive uma pausa para relaxar e respirar, entre 5 a 15 palavras",
+        "Comente algo que inspire gratidão, entre 5 a 15 palavras",
+        "Fale sobre a importância de cuidar de si mesmo, entre 5 a 15 palavras",
+        "Sugira um exercício simples de mindfulness, entre 5 a 15 palavras",
+        "Reforce a importância de manter uma mentalidade positiva, entre 5 a 15 palavras",
+        "Incentive um momento de desconexão tecnológica, entre 5 a 15 palavras",
+        "Compartilhe algo que motive a busca por equilíbrio, entre 5 a 15 palavras"
+      ],
+      "cooldown": 600
+    },
+    {
+      "name": "curiosidade_absurda",
+      "prompts": [
+        "Diga algo curioso, mas muito estranho, entre 5 a 15 palavras",
+        "Comente uma curiosidade inútil, entre 5 a 15 palavras",
+        "Fale sobre um fato improvável e bizarro, entre 5 a 15 palavras",
+        "Compartilhe algo que parece verdadeiro, mas é falso, entre 5 a 15 palavras",
+        "Explique uma curiosidade fictícia, entre 5 a 15 palavras",
+        "Crie um fato sobre uma invenção absurda, entre 5 a 15 palavras",
+        "Mencione algo aleatório e sem utilidade prática, entre 5 a 15 palavras",
+        "Conte um detalhe aleatório sobre o universo, entre 5 a 15 palavras",
+        "Fale de uma descoberta inútil mas cômica, entre 5 a 15 palavras"
+      ],
+      "cooldown": 600
+    }
+  ]
+}
