@@ -35,7 +35,6 @@ class AssistentBot:
         self.stt = SpeechToText()
         self.tts = TextToSpeech()
         self.skills = self._load_skills()
-        self.casting_skill_running = False
 
     def _load_config(self, config_path: str):
         return self._read_json(config_path)['config']
@@ -43,7 +42,7 @@ class AssistentBot:
     def _load_skills(self):
         skills_data = self._read_json(self.config['path_skills'])
         return [Skill(**skill) for skill in skills_data['skills']]
-
+    
     @staticmethod
     def _read_json(file_path: str):
         path = Path(file_path)
@@ -131,11 +130,11 @@ class AssistentBot:
             self.open_program(program_name=program_name)
             return False
 
-        elif any(keyword in text.lower() for keyword in ["print", "screenshot", "screenshots", "tela"]):
+        elif any(keyword in text.lower() for keyword in ["print", "screenshot", "screenshots", "tela", "imagem"]):
             screenshot = self.screenshot()
 
-            if any(keyword in text.lower() for keyword in ["transcreva", "transcreve", "transcrevi"]):
-                text = """Somente agora você podera exercer seu limite de palavra para poder transcrever todo o texto que está na tela.
+            if any(keyword in text.lower() for keyword in ["escreva", "escreve", "transcreva", "transcreve"]):
+                text = """Somente agora você podera exercer seu limite de palavra para poder escrever todo o texto que está na tela.
                 Responsa apenas o texto transcrito.
                 Texto transicrto: """
                 response = self.llm.generate_response(prompt=text, image=screenshot)

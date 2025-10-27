@@ -1,9 +1,15 @@
 import os
+from dotenv import load_dotenv
 import wave
 import pyaudio
 import keyboard
-from faster_whisper import WhisperModel
 from typing import Optional, List
+
+from faster_whisper import WhisperModel
+import assemblyai as aai
+
+_ = load_dotenv('config/.env')
+ASSEMBLYAI_API_KEY = os.getenv('ASSEMBLYAI_API_KEY')
 
 
 class SpeechToText:
@@ -88,11 +94,10 @@ class SpeechToText:
         except Exception as e:
             print(f"Erro ao salvar o arquivo: {e}")
 
-    def transcribe(self) -> Optional[str]:
+    def transcribe_whisper(self) -> Optional[str]:
         if not self.model:
             print("Modelo Whisper não foi inicializado corretamente.")
             return None
-
         try:
             segments, _ = self.model.transcribe(self.audio_path, beam_size=self.beam_size, language='pt')
             transcription = " ".join(segment.text for segment in segments).strip()
@@ -100,15 +105,24 @@ class SpeechToText:
         except Exception as e:
             print(f"Erro na transcrição: {e}")
             return None
+    
+    def transcribe_assemblyai(self) -> Optional[str]:
+        aai.settings.api_key = ASSEMBLYAI_API_KEY
+        config = aai.TranscriptionConfig(language_code="pt")
+        transcriber = aai.Transcriber(config=config)
+        transcript = transcriber.transcribe(self.audio_path)
+        return transcript.text
+
 
     def run(self) -> Optional[str]:
         frames = self.record()
         if frames:
             self.save_audio(frames)
-            return self.transcribe()
+            return self.transcribe_whisper()
         return None
+
 
 
 if __name__ == "__main__":
     stt = SpeechToText()
-    stt.run()
+    stt.transcribe_assemblyai()

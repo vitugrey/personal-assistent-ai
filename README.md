@@ -23,3 +23,12 @@
 
 ## instalação
 python==3.11.9
+
+
+- [x]  Experimentar outras IA
+- [ ]  Deixar tudo local
+- [ ]  Transformar o diário em pdf com AI (biblioteca da asimov)
+- [ ]  Criar uma base de dados com o meu diário
+- [x]  Alterar o código LLM para criar varias chains (psicologo, professor, namorada, assistente de jogos) utilizando tecnicas de RAG e tools
+- [ ]  Criar um menu inicial para saber qual personalidade eu vou conversar
+- [ ]  usar a lib de transcrever a imagem em texto e utlizar eng. prompt para screanshots

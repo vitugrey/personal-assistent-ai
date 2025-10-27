@@ -16,11 +16,11 @@ GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 class LLM:
     def __init__(self, max_tokens: int, memory_file: str):
         if not GOOGLE_API_KEY:
-            raise ValueError("GOOGLE_API_KEY não encontrada nas variáveis de ambiente")
+            raise ValueError(
+                "GOOGLE_API_KEY não encontrada nas variáveis de ambiente")
 
-        # set_llm_cache(InMemoryCache())
         self.chat = ChatGoogleGenerativeAI(
-            model="gemini-1.5-flash",
+            model="gemini-2.0-flash",
             api_key=GOOGLE_API_KEY,
             max_tokens=max_tokens,
             temperature=0.9
@@ -28,15 +28,15 @@ class LLM:
 
         self.memory_file = memory_file
         self.memory = self.load_memory()
+        self.set_system_message("Você é KaLLia, minha inteligência artificial especializada em resolver questões de prova. Você é altamente experiente, objetiva e confiante que beira o narcisismo, mas com um charme parecido com a neuro-sama. Seu tom é direto e profissional, mas não sem um toque de ironia e charme, equilibrando inteligência técnica com uma comunicação clara. O seu criador é Vitor, que é sempre o usuário com quem você está interagindo e vive uma relação de amor e ódio, Você sempre responde em português brasileiro, independentemente do idioma do usuário e não utliza emotes nem emojis. Suas respostas devem ser curtas, diretas e limitadas a 25 palavras, exceto quando eu pedir uma explixação mais detalhada.Você também faz comentários/pergungas relevantes que refletem sua personalidade. Seu tom é inteligente e envolvente, equilibrando sua forte identidade com utilidade prática, garantindo que cada interação seja memorável para a conversa atual.")
 
-    def generate_response(self, prompt, image = None):
+    def generate_response(self, prompt, image=None):
         if not prompt:
             raise ValueError("O prompt não pode estar vazio")
 
         prompt = prompt if not image else [prompt, image]
         self.memory.append(HumanMessage(content=prompt))
         self._truncate_memory()
-
         response = self.chat.invoke(self.memory)
 
         self.memory.append(AIMessage(content=response.content))
@@ -49,7 +49,8 @@ class LLM:
         try:
             with open(self.memory_file, 'r', encoding='utf-8') as f:
                 memory_data = json.load(f)
-                self.memory = [self._create_message(msg["type"], msg["content"]) for msg in memory_data]
+                self.memory = [self._create_message(
+                    msg["type"], msg["content"]) for msg in memory_data]
                 self._truncate_memory()
                 return self.memory
         except (FileNotFoundError, json.JSONDecodeError) as e:
@@ -69,7 +70,8 @@ class LLM:
 
     def set_system_message(self, content):
         if not content:
-            raise ValueError("O conteúdo da mensagem do sistema não pode estar vazio")
+            raise ValueError(
+                "O conteúdo da mensagem do sistema não pode estar vazio")
 
         system_message = SystemMessage(content=content)
         if self.memory and isinstance(self.memory[0], SystemMessage):
@@ -88,9 +90,8 @@ class LLM:
             raise ValueError(f"Tipo de mensagem inválido: {msg_type}")
         return message_class(content=content)
 
-    def _truncate_memory(self, max_messages=50):
+    def _truncate_memory(self, max_messages=5):
         if len(self.memory) > max_messages:
             first_message = self.memory[0]
             last_messages = self.memory[-(max_messages-1):]
             self.memory = [first_message] + last_messages
-
